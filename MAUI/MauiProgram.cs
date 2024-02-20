@@ -1,4 +1,5 @@
 ﻿using Common.Data;
+using Microsoft.Extensions.Logging;
 
 namespace MAUI;
 public static class MauiProgram
@@ -14,8 +15,10 @@ public static class MauiProgram
             });
 
         builder.Services.AddMauiBlazorWebView();
+
 #if DEBUG
-        builder.Services.AddBlazorWebViewDeveloperTools();
+		builder.Services.AddBlazorWebViewDeveloperTools();
+		builder.Logging.AddDebug();
 #endif
 
         builder.Services.AddSingleton<WeatherForecastService>();
