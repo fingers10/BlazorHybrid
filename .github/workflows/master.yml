@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       # Checkout the code
       - uses: actions/checkout@v3.4.0
@@ -24,6 +24,10 @@ jobs:
       # Install dotnet wasm buildtools workload
       - name: Install .NET WASM Build Tools
         run: dotnet workload install wasm-tools
+
+      # Install dotnet maui buildtools workload
+      - name: Install .NET MAUI Build Tools
+        run: dotnet workload install maui
 
       # Restore Dependencies
       - name: Restore dependencies
