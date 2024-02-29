@@ -33,10 +33,6 @@ jobs:
       - name: Build Blazor
         run: dotnet build ./Web/Web.csproj --configuration Release --no-restore
 
-      # Build Windows
-      #- name: Build Windows
-      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 --configuration Release --no-restore
-
       # Build Android
       - name: Build Android
         run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
@@ -44,6 +40,10 @@ jobs:
       # Build IOS
       - name: Build IOS
         run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release --no-restore
+
+      # Build Windows
+      - name: Build Windows
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 --configuration Release --no-restore
 
       # Build MacCatalyst
       - name: Build MacCatalyst
