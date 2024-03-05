@@ -43,7 +43,7 @@ jobs:
 
       # Build Windows
       - name: Build Windows
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win10-x64 --configuration Release --no-restore
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win-x64 --configuration Release --no-restore
 
       # Build MacCatalyst
       - name: Build MacCatalyst
