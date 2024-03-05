@@ -20,6 +20,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
         <Nullable>enable</Nullable>
+        <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 
         <!-- Display name -->
         <ApplicationTitle>MAUI</ApplicationTitle>
