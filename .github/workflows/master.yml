@@ -28,6 +28,10 @@ jobs:
       # Restore Dependencies
       - name: Restore dependencies
         run: dotnet restore
+
+      # Build MacCatalyst
+      - name: Build MacCatalyst
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release --no-restore
         
       # Build Blazor
       - name: Build Blazor
@@ -44,7 +48,3 @@ jobs:
       # Build Windows
       - name: Build Windows
         run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win10-x64 --configuration Release
-
-      # Build MacCatalyst
-      - name: Build MacCatalyst
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalys --configuration Release --no-restore
