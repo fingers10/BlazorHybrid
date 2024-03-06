@@ -31,7 +31,7 @@ jobs:
 
       # Build MacCatalyst
       - name: Build MacCatalyst
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release --no-restore
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release
         
       # Build Blazor
       - name: Build Blazor
