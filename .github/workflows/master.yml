@@ -23,7 +23,7 @@ jobs:
           
       # Install dotnet buildtools workload
       - name: Install .NET Build Tools
-        run: dotnet workload install maui macos ios wasm-tools
+        run: dotnet workload install maui wasm-tools
 
       # Restore Dependencies
       - name: Restore dependencies
