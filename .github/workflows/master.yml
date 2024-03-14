@@ -34,7 +34,7 @@ jobs:
         run: dotnet build ./Web/Web.csproj --configuration Release --no-restore
 
       # publishes Blazor project to the release-folder
-      - name: Publish .NET Core Project
+      - name: Publish Blazor Web Project
         run: dotnet publish ./Web/Web.csproj -c Release -o dist/BlazorHybrid --nologo
 
       # copy index.html to 404.html to serve the same file when a file is not found
@@ -45,25 +45,40 @@ jobs:
       - name: Add .nojekyll file
         run: touch dist/BlazorHybrid/wwwroot/.nojekyll
 
+      - name: Upload Artifacts 🔺 # The project is then uploaded as an artifact named 'site'.
+        uses: actions/upload-artifact@v1
+        with:
+          name: site
+          path: dist/BlazorHybrid
+
+      # Build Android
+      #- name: Build Android
+      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
+
+      # Build IOS
+      #- name: Build IOS
+      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release --no-restore
+
+      # Build Windows
+      #- name: Build Windows
+      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win10-x64 --configuration Release
+
+      # Build MacCatalyst
+      #- name: Build MacCatalyst
+      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts 🔻 # The built project is downloaded into the 'site' folder.
+        uses: actions/download-artifact@v1
+        with:
+          name: site
+
       - name: Commit wwwroot to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: dist/BlazorHybrid/wwwroot
-
-      # Build Android
-      - name: Build Android
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
-
-      # Build IOS
-      - name: Build IOS
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release --no-restore
-
-      # Build Windows
-      - name: Build Windows
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win10-x64 --configuration Release
-
-      # Build MacCatalyst
-      - name: Build MacCatalyst
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release
+          FOLDER: site
