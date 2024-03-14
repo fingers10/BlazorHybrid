@@ -45,6 +45,7 @@ jobs:
       - name: Add .nojekyll file
         run: touch dist/BlazorHybrid/wwwroot/.nojekyll
 
+      # Upload Blazor Web App Artifacts
       - name: Upload Artifacts 🔺 # The project is then uploaded as an artifact named 'site'.
         uses: actions/upload-artifact@v1
         with:
@@ -52,30 +53,33 @@ jobs:
           path: dist/BlazorHybrid/wwwroot
 
       # Build Android
-      #- name: Build Android
-      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
+      - name: Build Android
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
 
       # Build IOS
-      #- name: Build IOS
-      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release --no-restore
+      - name: Build IOS
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release --no-restore
 
       # Build Windows
-      #- name: Build Windows
-      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win10-x64 --configuration Release
+      - name: Build Windows
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-windows10.0.19041.0 -p:RuntimeIdentifierOverride=win10-x64 --configuration Release
 
       # Build MacCatalyst
-      #- name: Build MacCatalyst
-      #  run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release
+      - name: Build MacCatalyst
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release
 
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
+
+      # Download uploaded Blazor Web App Artifacts
       - name: Download Artifacts 🔻 # The built project is downloaded into the 'site' folder.
         uses: actions/download-artifact@v1
         with:
           name: site
 
+      # Commit Blazor Web App to GitHub Pages
       - name: Commit wwwroot to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
