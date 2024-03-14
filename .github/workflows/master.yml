@@ -33,6 +33,25 @@ jobs:
       - name: Build Blazor
         run: dotnet build ./Web/Web.csproj --configuration Release --no-restore
 
+      # publishes Blazor project to the release-folder
+      - name: Publish .NET Core Project
+        run: dotnet publish ./Web/Web.csproj -c Release -o dist/BlazorHybrid --nologo
+
+      # copy index.html to 404.html to serve the same file when a file is not found
+      - name: Copy index.html to 404.html
+        run: cp dist/BlazorHybrid/wwwroot/index.html dist/BlazorHybrid/wwwroot/404.html
+
+      # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+      - name: Add .nojekyll file
+        run: touch dist/BlazorHybrid/wwwroot/.nojekyll
+
+      - name: Commit wwwroot to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist/BlazorHybrid/wwwroot
+
       # Build Android
       - name: Build Android
         run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
