@@ -1,6 +1,12 @@
-﻿<Router AppAssembly="@typeof(MauiProgram).Assembly">
+﻿<Router AppAssembly="@typeof(MauiProgram).Assembly" AdditionalAssemblies="new[] { typeof(Common.Shared.MainLayout).Assembly }">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Common.Shared.MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(Common.Shared.MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
 </Router>
