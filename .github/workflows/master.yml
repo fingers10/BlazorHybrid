@@ -22,8 +22,8 @@ jobs:
           dotnet-version: 8.0.x
           
       # Install dotnet buildtools workload
-      - name: Install .NET Build Tools
-        run: dotnet workload install maui wasm-tools
+      #- name: Install .NET Build Tools
+      #  run: dotnet workload install maui wasm-tools
 
       # Restore Dependencies
       - name: Restore dependencies
