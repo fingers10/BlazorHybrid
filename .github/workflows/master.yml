@@ -50,13 +50,17 @@ jobs:
       # Checkout the code
       - uses: actions/checkout@v4
 
+      # Restore Dependencies
+      - name: Restore dependencies
+        run: dotnet restore ./MAUI/MAUI.csproj
+
       # Build Android
       - name: Build Android
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
 
       # Build IOS
       - name: Build IOS
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release --no-restore
 
       # Build Windows
       - name: Build Windows
