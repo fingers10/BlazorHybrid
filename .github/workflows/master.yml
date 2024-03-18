@@ -9,57 +9,54 @@ on:
       - master
 
 jobs:
-  build-and-test:
+  build-test-deploy-blazor:
+    runs-on: ubuntu-latest
+    steps:
+    # Checkout the code
+      - uses: actions/checkout@v4
+
+    # Install .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+    # Install dotnet wasm workload
+      - name: Install .NET WASM Build Tools
+        run: dotnet workload install wasm-tools
+
+    # publishes Blazor project to the release-folder
+      - name: Publish Blazor Web Project
+        run: dotnet publish ./Web/Web.csproj -c Release -o dist/BlazorHybrid --nologo
+
+    # copy index.html to 404.html to serve the same file when a file is not found
+      - name: Copy index.html to 404.html
+        run: cp dist/BlazorHybrid/wwwroot/index.html dist/BlazorHybrid/wwwroot/404.html
+
+    # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+      - name: Add .nojekyll file
+        run: touch dist/BlazorHybrid/wwwroot/.nojekyll
+
+    # Commit Blazor Web App to GitHub Pages
+      - name: Commit wwwroot to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          BRANCH: gh-pages
+          FOLDER: dist/BlazorHybrid/wwwroot  
+      
+  build-test-deploy-maui:
     runs-on: windows-latest
     steps:
       # Checkout the code
       - uses: actions/checkout@v4
 
-      # Install .NET Core SDK
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-          
-      # Install dotnet buildtools workload
-      #- name: Install .NET Build Tools
-      #  run: dotnet workload install maui wasm-tools
-
-      # Restore Dependencies
-      - name: Restore dependencies
-        run: dotnet restore
-        
-      # Build Blazor
-      - name: Build Blazor
-        run: dotnet build ./Web/Web.csproj --configuration Release --no-restore
-
-      # publishes Blazor project to the release-folder
-      - name: Publish Blazor Web Project
-        run: dotnet publish ./Web/Web.csproj -c Release -o dist/BlazorHybrid --nologo
-
-      # copy index.html to 404.html to serve the same file when a file is not found
-      - name: Copy index.html to 404.html
-        run: cp dist/BlazorHybrid/wwwroot/index.html dist/BlazorHybrid/wwwroot/404.html
-
-      # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
-      - name: Add .nojekyll file
-        run: touch dist/BlazorHybrid/wwwroot/.nojekyll
-
-      # Upload Blazor Web App Artifacts
-      - name: Upload Artifacts 🔺 # The project is then uploaded as an artifact named 'site'.
-        uses: actions/upload-artifact@v4
-        with:
-          name: site
-          path: dist/BlazorHybrid
-          retention-days: 1
-
       # Build Android
       - name: Build Android
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release --no-restore
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-android --configuration Release
 
       # Build IOS
       - name: Build IOS
-        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release --no-restore
+        run: dotnet build ./MAUI/MAUI.csproj -f net8.0-ios --configuration Release
 
       # Build Windows
       - name: Build Windows
@@ -68,22 +65,3 @@ jobs:
       # Build MacCatalyst
       - name: Build MacCatalyst
         run: dotnet build ./MAUI/MAUI.csproj -f net8.0-maccatalyst --configuration Release
-
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-
-      # Download uploaded Blazor Web App Artifacts
-      - name: Download Artifacts 🔻 # The built project is downloaded into the 'site' folder.
-        uses: actions/download-artifact@v4
-        with:
-          name: site
-
-      # Commit Blazor Web App to GitHub Pages
-      - name: Commit wwwroot to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: wwwroot
